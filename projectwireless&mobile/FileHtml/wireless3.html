@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transmit Power Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .result, .error {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .column {
+            flex: 50%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transmit Power Calculator</h1>
+        <div class="row">
+            <div class="column">
+                <div class="form-group">
+                    <label for="pathLoss">Path Loss (Lp):</label>
+                    <input type="number" id="pathLoss" placeholder="Enter path loss">
+                    <select id="pathLossUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="frequency">Frequency (f) in MHz:</label>
+                    <input type="number" id="frequency" placeholder="Enter frequency">
+                </div>
+                <div class="form-group">
+                    <label for="transmitGain">Transmit Antenna Gain (Gt):</label>
+                    <input type="number" id="transmitGain" placeholder="Enter transmit antenna gain">
+                    <select id="transmitGainUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transmitterAmplifierGain">Transmitter Amplifier Gain (At):</label>
+                    <input type="number" id="transmitterAmplifierGain" placeholder="Enter transmitter amplifier gain">
+                    <select id="transmitterAmplifierGainUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+            </div>
+            <div class="column">
+                <div class="form-group">
+                    <label for="receiveGain">Receive Antenna Gain (Gr):</label>
+                    <input type="number" id="receiveGain" placeholder="Enter receive antenna gain">
+                    <select id="receiveGainUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dataRate">Data Rate (Rb) in kbps:</label>
+                    <input type="number" id="dataRate" placeholder="Enter data rate">
+                </div>
+                <div class="form-group">
+                    <label for="feedLineLoss">Antenna Feed Line Loss (Lf):</label>
+                    <input type="number" id="feedLineLoss" placeholder="Enter antenna feed line loss">
+                    <select id="feedLineLossUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="otherLosses">Other Losses (Lo):</label>
+                    <input type="number" id="otherLosses" placeholder="Enter other losses">
+                    <select id="otherLossesUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <div class="form-group">
+                    <label for="fadeMargin">Fade Margin (Fm):</label>
+                    <input type="number" id="fadeMargin" placeholder="Enter fade margin">
+                    <select id="fadeMarginUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="amplifierGain">Receiver Amplifier Gain (Ar):</label>
+                    <input type="number" id="amplifierGain" placeholder="Enter receiver amplifier gain">
+                    <select id="amplifierGainUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="noiseFigure">Noise Figure (Nf):</label>
+                    <input type="number" id="noiseFigure" placeholder="Enter noise figure">
+                    <select id="noiseFigureUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="temperature">Noise Temperature (T) in K:</label>
+                    <input type="number" id="temperature" placeholder="Enter noise temperature">
+                </div>
+            </div>
+            <div class="column">
+                <div class="form-group">
+                    <label for="linkMargin">Link Margin (M):</label>
+                    <input type="number" id="linkMargin" placeholder="Enter link margin">
+                    <select id="linkMarginUnit">
+                        <option value="dB">dB</option>
+                        <option value="Watt">Watt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modulationType">Modulation Type:</label>
+                    <select id="modulationType">
+                        <option value="bpsk">BPSK/QPSK</option>
+                        <option value="8psk">8-PSK</option>
+                        <option value="16psk">16-PSK</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ber">BER:</label>
+                    <select id="ber">
+                        <option value="1e-1">10^-1</option>
+                        <option value="1e-2">10^-2</option>
+                        <option value="1e-3">10^-3</option>
+                        <option value="1e-4">10^-4</option>
+                        <option value="1e-5">10^-5</option>
+                        <option value="1e-6">10^-6</option>
+                        <option value="1e-7">10^-7</option>
+                        <option value="1e-8">10^-8</option>
+                    </select>
+                </div>
+                <button onclick="calculateResults()">Calculate</button>
+                <div id="results" class="result"></div>
+                <div id="error" class="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function convertToDb(value, unit) {
+            if (unit === "Watt") {
+                return 10 * Math.log10(value);
+            }
+            return value;
+        }
+
+        function getEbN0(modulationType, ber) {
+            const berValues = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8];
+            const ebN0Values = {
+                bpsk: [1.59, 3.69, 6.03, 8.41, 10.82, 13.24, 15.66, 18.09],
+                '8psk': [5.72, 7.74, 10.08, 12.47, 14.88, 17.31, 19.74, 22.18],
+                '16psk': [7.77, 10.11, 12.49, 14.91, 17.34, 19.78, 22.23, 24.68]
+            };
+
+            const index = berValues.indexOf(parseFloat(ber));
+            return ebN0Values[modulationType][index];
+        }
+
+        function calculateResults() {
+            const pathLoss = convertToDb(parseFloat(document.getElementById('pathLoss').value), document.getElementById('pathLossUnit').value);
+            const frequency = parseFloat(document.getElementById('frequency').value);
+            const transmitGain = convertToDb(parseFloat(document.getElementById('transmitGain').value), document.getElementById('transmitGainUnit').value);
+            const transmitterAmplifierGain = convertToDb(parseFloat(document.getElementById('transmitterAmplifierGain').value), document.getElementById('transmitterAmplifierGainUnit').value);
+            const receiveGain = convertToDb(parseFloat(document.getElementById('receiveGain').value), document.getElementById('receiveGainUnit').value);
+            const dataRate = parseFloat(document.getElementById('dataRate').value) * 1000; // Convert kbps to bps
+            const feedLineLoss = convertToDb(parseFloat(document.getElementById('feedLineLoss').value), document.getElementById('feedLineLossUnit').value);
+            const otherLosses = convertToDb(parseFloat(document.getElementById('otherLosses').value), document.getElementById('otherLossesUnit').value);
+            const fadeMargin = convertToDb(parseFloat(document.getElementById('fadeMargin').value), document.getElementById('fadeMarginUnit').value);
+            const amplifierGain = convertToDb(parseFloat(document.getElementById('amplifierGain').value), document.getElementById('amplifierGainUnit').value);
+            const noiseFigure = convertToDb(parseFloat(document.getElementById('noiseFigure').value), document.getElementById('noiseFigureUnit').value);
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const linkMargin = convertToDb(parseFloat(document.getElementById('linkMargin').value), document.getElementById('linkMarginUnit').value);
+            const modulationType = document.getElementById('modulationType').value;
+            const ber = document.getElementById('ber').value;
+
+            if (isNaN(pathLoss) || isNaN(frequency) || isNaN(transmitGain) || isNaN(transmitterAmplifierGain) || isNaN(receiveGain) ||
+                isNaN(dataRate) || isNaN(feedLineLoss) || isNaN(otherLosses) || isNaN(fadeMargin) ||
+                isNaN(amplifierGain) || isNaN(noiseFigure) || isNaN(temperature) || isNaN(linkMargin) || isNaN(ber)) {
+                document.getElementById('error').innerText = 'Please fill in all fields with valid numbers.';
+                document.getElementById('results').innerText = '';
+                return;
+            }
+
+            // Calculate Eb/N0 using the table
+            const ebN0 = getEbN0(modulationType, ber);
+
+            // Convert Eb/N0 to linear scale
+            const ebN0Linear = Math.pow(10, ebN0 / 10);
+
+            // Calculate noise power
+            const k = 1.38e-23; // Boltzmann's constant
+            const noisePower = k * temperature * noiseFigure * dataRate * ebN0Linear;
+
+            // Convert noise power to dBm
+            const noisePower_dBm = 10 * Math.log10(noisePower) + 30;
+
+            // Calculate received power
+            const receivedPower_dBm = noisePower_dBm + linkMargin;
+
+            // Calculate transmit power in dB
+            const transmitPower_dB = receivedPower_dBm + pathLoss + feedLineLoss + otherLosses + fadeMargin - transmitGain - transmitterAmplifierGain - receiveGain - amplifierGain;
+
+            // Convert transmit power to linear scale (Watts)
+            const transmitPower_watts = Math.pow(10, transmitPower_dB / 10);
+
+            // Display results
+            document.getElementById('results').innerHTML = `
+                <p>Transmit Power Required: ${transmitPower_dB.toFixed(2)} dB</p>
+                <p>Transmit Power Required: ${transmitPower_watts.toFixed(6)} Watts</p>
+            `;
+            document.getElementById('error').innerText = '';
+        }
+    </script>
+</body>
+</html>
