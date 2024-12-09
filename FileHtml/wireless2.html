@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LTE Resource Block Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            
+        }
+        .container {
+            margin-top: 50px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .result, .error {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">LTE Resource Block Calculator</h1>
+        <form>
+            <div class="form-group">
+                <label for="bandwidth">Resource Block Bandwidth (kHz):</label>
+                <input type="number" class="form-control" id="bandwidth" placeholder="Enter bandwidth in kHz" value="180">
+            </div>
+            <div class="form-group">
+                <label for="subcarrierSpacing">Subcarrier Spacing (kHz):</label>
+                <input type="number" class="form-control" id="subcarrierSpacing" placeholder="Enter subcarrier spacing in kHz" value="15">
+            </div>
+            <div class="form-group">
+                <label for="numOfdmSymbols">Number of OFDM Symbols per Resource Block:</label>
+                <input type="number" class="form-control" id="numOfdmSymbols" placeholder="Enter number of OFDM symbols per resource block" value="7">
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration of Each Resource Block (ms):</label>
+                <input type="number" class="form-control" id="duration" placeholder="Enter duration of each resource block in ms" value="0.5">
+            </div>
+            <div class="form-group">
+                <label for="modulation">Modulation:</label>
+                <select class="form-control" id="modulation">
+                    <option value="1">BPSK (1 bit)</option>
+                    <option value="2">QPSK (2 bits)</option>
+                    <option value="4">16-QAM (4 bits)</option>
+                    <option value="6">64-QAM (6 bits)</option>
+                    <option value="8">256-QAM (8 bits)</option>
+                    <option value="10">1024-QAM (10 bits)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="numBlocks">Number of Parallel Resource Blocks:</label>
+                <input type="number" class="form-control" id="numBlocks" placeholder="Enter number of parallel resource blocks" value="4">
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="calculateResults()">Calculate</button>
+        </form>
+
+        <div id="results" class="result text-center mt-4"></div>
+        <div id="error" class="error text-center mt-4"></div>
+    </div>
+
+    <script>
+        function calculateResults() {
+            const bandwidth = parseFloat(document.getElementById('bandwidth').value);
+            const subcarrierSpacing = parseFloat(document.getElementById('subcarrierSpacing').value);
+            const numOfdmSymbols = parseFloat(document.getElementById('numOfdmSymbols').value);
+            const duration = parseFloat(document.getElementById('duration').value);
+            const modulation = parseInt(document.getElementById('modulation').value);
+            const numBlocks = parseInt(document.getElementById('numBlocks').value);
+
+            const numSubcarriers = bandwidth / subcarrierSpacing;
+
+            // Validate if the number of subcarriers is an integer
+            if (!Number.isInteger(numSubcarriers)) {
+                document.getElementById('error').innerText = 'There is an error: The number of subcarriers must be an integer.';
+                document.getElementById('results').innerText = '';
+                return;
+            }
+
+            // Number of bits per resource element
+            const bitsPerResourceElement = modulation;
+
+            // Number of bits per OFDM symbol
+            const bitsPerOfdmSymbol = numSubcarriers * bitsPerResourceElement;
+
+            // Number of bits per resource block
+            const bitsPerResourceBlock = bitsPerOfdmSymbol * numOfdmSymbols;
+
+            // Transmission rate per resource block
+            const transmissionRatePerResourceBlock = bitsPerResourceBlock / (duration / 1000); // Convert ms to seconds
+
+            // Maximum transmission rate for the user
+            const maxTransmissionRate = transmissionRatePerResourceBlock * numBlocks;
+
+            // Display Results
+            // document.getElementById('results').innerHTML = `
+            //     <p>Number of Bits per Resource Element: ${bitsPerResourceElement}</p>
+            //     <p>Number of Bits per OFDM Symbol: ${bitsPerOfdmSymbol}</p>
+            //     <p>Number of Bits per Resource Block: ${bitsPerResourceBlock}</p>
+            //     <p>Maximum Transmission Rate: ${maxTransmissionRate} bps (${(maxTransmissionRate / 1e6).toFixed(2)} Mbps)</p>
+            // `;
+            Swal.fire({html:`
+                <p>Number of Bits per Resource Element: ${bitsPerResourceElement}</p>
+                <p>Number of Bits per OFDM Symbol: ${bitsPerOfdmSymbol}</p>
+                <p>Number of Bits per Resource Block: ${bitsPerResourceBlock}</p>
+                <p>Maximum Transmission Rate: ${maxTransmissionRate} bps (${(maxTransmissionRate / 1e6).toFixed(2)} Mbps)</p>
+            `});
+            document.getElementById('error').innerText = '';
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

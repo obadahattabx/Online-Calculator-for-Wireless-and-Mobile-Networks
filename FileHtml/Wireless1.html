@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireless Communication Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+
+        }
+        .container {
+            margin-top: 50px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Wireless Communication Calculator</h1>
+        <form>
+            <div class="form-group">
+                <label for="bandwidth">Signal Bandwidth (kHz):</label>
+                <input type="number" class="form-control" id="bandwidth" placeholder="Enter signal bandwidth in kHz" value="4">
+            </div>
+            <div class="form-group">
+                <label for="quantizerBits">Quantizer (bits):</label>
+                <input type="number" class="form-control" id="quantizerBits" placeholder="Enter number of bits for quantizer" value="8">
+            </div>
+            <div class="form-group">
+                <label for="compressionRatio">Source Encoder Compression Rate:</label>
+                <input type="number" class="form-control" id="compressionRatio" placeholder="Enter compression rate" step="0.01" value="0.25">
+            </div>
+            <div class="form-group">
+                <label for="codeRate">Channel Encoder Rate:</label>
+                <input type="number" class="form-control" id="codeRate" placeholder="Enter code rate" step="0.01" value="0.5">
+            </div>
+            <div class="form-group">
+                <label for="interleaverBits">Interleaver (bits):</label>
+                <input type="number" class="form-control" id="interleaverBits" placeholder="Enter number of bits for interleaver" value="1024">
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="calculateResults()">Calculate</button>
+        </form>
+
+        <div id="results" class="result text-center mt-4"></div>
+    </div>
+
+    <script>
+        function calculateResults() {
+            const bandwidth = document.getElementById('bandwidth').value * 1000; // Convert kHz to Hz
+            const quantizerBits = document.getElementById('quantizerBits').value;
+            const compressionRatio = document.getElementById('compressionRatio').value;
+            const codeRate = document.getElementById('codeRate').value;
+            const interleaverBits = document.getElementById('interleaverBits').value;
+
+            // Sampling Frequency
+            const samplingRate = 2 * bandwidth;
+
+            // Number of Quantization Levels
+            const quantizationLevels = Math.pow(2, quantizerBits);
+
+            // Bit Rate after Quantization
+            const quantizerBitRate = samplingRate * quantizerBits;
+
+            // Bit Rate at the Output of Source Encoder
+            const sourceEncoderBitRate = quantizerBitRate * compressionRatio;
+
+            // Bit Rate at the Output of Channel Encoder
+            const channelEncoderBitRate = sourceEncoderBitRate / codeRate;
+
+            // Bit Rate at the Output of Interleaver
+            const interleaverBitRate = channelEncoderBitRate;
+
+            // Display Results
+            // document.getElementById('results').innerHTML = `
+            //     <p>Sampling Frequency: ${samplingRate} Hz</p>
+            //     <p>Number of Quantization Levels: ${quantizationLevels}</p>
+            //     <p>Bit Rate at the Output of Source Encoder: ${sourceEncoderBitRate} bps</p>
+            //     <p>Bit Rate at the Output of Channel Encoder: ${channelEncoderBitRate} bps</p>
+            //     <p>Bit Rate at the Output of Interleaver: ${interleaverBitRate} bps</p>
+            // `;
+            Swal.fire({html:`<p>Sampling Frequency: ${samplingRate} Hz</p>
+                <p>Number of Quantization Levels: ${quantizationLevels}</p>
+                <p>Bit Rate at the Output of Source Encoder: ${sourceEncoderBitRate} bps</p>
+                <p>Bit Rate at the Output of Channel Encoder: ${channelEncoderBitRate} bps</p>
+                <p>Bit Rate at the Output of Interleaver: ${interleaverBitRate} bps</p>`});
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
